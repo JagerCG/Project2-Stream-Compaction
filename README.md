@@ -25,7 +25,7 @@ Performance tests were conducted in **Release mode** without debugging. Initial 
 
 ### Scan Performance vs. Array Size
 
-![](images/result.png)
+![](img/result.png)
 
 For small arrays, the CPU scan was much faster than the GPU implementations because the amount of work was too small to offset GPU kernel launch overhead.
 
