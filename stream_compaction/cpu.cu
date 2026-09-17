@@ -20,6 +20,15 @@ namespace StreamCompaction {
         void scan(int n, int *odata, const int *idata) {
             timer().startCpuTimer();
             // TODO
+
+            int sum = 0;
+
+            for (int i = 0; i < n; i++)
+            {
+                odata[i] = sum;
+                sum += idata[i];
+            }
+
             timer().endCpuTimer();
         }
 
@@ -31,8 +40,24 @@ namespace StreamCompaction {
         int compactWithoutScan(int n, int *odata, const int *idata) {
             timer().startCpuTimer();
             // TODO
+            
+            int indexO = 0;
+            
+            for (int i = 0; i < n; i++)
+            {
+                if (idata[i] == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    odata[indexO] = idata[i];
+					indexO++;
+                }
+            }
+
             timer().endCpuTimer();
-            return -1;
+            return indexO;
         }
 
         /**
@@ -41,10 +66,34 @@ namespace StreamCompaction {
          * @returns the number of elements remaining after compaction.
          */
         int compactWithScan(int n, int *odata, const int *idata) {
-            timer().startCpuTimer();
+            //timer().startCpuTimer();
             // TODO
-            timer().endCpuTimer();
-            return -1;
+
+            int* validMap = new int[n];
+            int* scanned = new int[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                validMap[i] = (idata[i] != 0) ? 1 : 0;
+            }
+
+            scan(n, scanned, validMap);
+
+            for (int i = 0; i < n; i++)
+            {
+                if (validMap[i] == 1)
+                {
+                    odata[scanned[i]] = idata[i];
+                }
+            }
+
+            int num = scanned[n - 1] + validMap[n - 1];
+
+            delete[] validMap;
+            delete[] scanned;
+
+            //timer().endCpuTimer();
+            return num;
         }
     }
 }
